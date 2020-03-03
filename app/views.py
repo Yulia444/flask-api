@@ -35,8 +35,8 @@ def api_post_event(eventid):
         db.session.add(enrollment)
         db.session.commit()
     elif request.method == "DELETE":
-        db.session.delete(Enrollments.query.filter_by(and_(event_id=eventid,
-         participant_id = get_jwt_identity())))
+        db.session.delete(Enrollments.query.filter(db.and_(Enrollments.event_id==eventid,
+         Enrollments.participant_id == get_jwt_identity())).first())
         db.session.commit()
     return jsonify({'status':'success'})
 
