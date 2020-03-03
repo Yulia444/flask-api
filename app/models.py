@@ -35,7 +35,7 @@ class Participants(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     name=db.Column(db.String(50), nullable=False)
     email=db.Column(db.String(40), nullable=False)
-    password=db.Column(db.String(40), nullable=False)
+    password=db.Column(db.String(1000), nullable=False)
     picture=db.Column(db.String(50))
     location=db.Column(db.String(255), nullable=False)
     about=db.Column(db.String(1000), nullable=False)
@@ -43,10 +43,10 @@ class Participants(db.Model):
     events = db.relationship('Association', back_populates="participant")
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
     
     def password_valid(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password, password)
 
 class Enrollments(db.Model):
     __tablename__='enrollments'

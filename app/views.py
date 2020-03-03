@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app import app, db
-from app.schemas import LocationsSchema, EventSchema
+from app.schemas import LocationsSchema, EventSchema, ParticipatesSchema
 from app.models import Locations, Event, Participants
 
 
@@ -38,7 +38,7 @@ def api_post_event():
 def api_post_register():
     data = request.json
     try:
-        username = data.get('username')
+        name = data.get('name')
         email = data.get('email')
         password = data.get('password')
         location = data.get('location')
@@ -54,7 +54,8 @@ def api_post_register():
         about=about
     )
     participant.set_password(password)
-    participant.save()
+    db.session.add(participant)
+    db.session.commit()
     return jsonify(dict(id=Participants.query.count(),
                     name=name,
                     email=email,
@@ -79,6 +80,7 @@ def api_post_auth():
 @app.route('/profile/', methods=["GET"])
 @jwt_required
 def api_get_profile():
-    current_identity = get_jwt_identity()
-    return jsonify(current_identity)
+    current_user_id = get_jwt_identity()
+    user = ParticipatesSchema(many=True)
+    return jsonify(user.dump(Participants.query.filter_by(id=current_user_id)))
 

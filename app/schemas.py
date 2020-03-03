@@ -33,7 +33,7 @@ class ParticipatesSchema(Schema):
     location=fields.String()
     about=fields.String()
     enrollmants=fields.Nested("EnrollmentsSchema")
-    events=fields.Nested("Events")
+    events=fields.Nested("AccossiationShema")
 
 class EnrollmentsSchema(Schema):
     id=fields.Integer(dump_only=True)
@@ -45,3 +45,10 @@ class LocationsSchema(Schema):
     id=fields.Integer(dump_only=True)
     title=fields.String()
     code=fields.String()
+
+class AccossiationShema(Schema):
+    id=fields.Integer(dump_only=True)
+    event_id=fields.Nested("EventSchema")
+    participant_id=fields.Nested("ParticipatesSchema")
+    event=fields.Nested("EventSchema")
+    participant=fields.Nested("ParticipatesSchema")
