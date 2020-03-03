@@ -1,16 +1,6 @@
 from marshmallow import Schema, fields
-from marshmallow_enum import EnumField
 from flask.views import MethodView
-from enum import Enum
-class TYPE(Enum):
-    HACKATON=1
-    GAME=2
-    WORKSHOP=3
 
-class CATEGORY(Enum):
-    PYTHON=1
-    ML=2
-    PROJECT_MANAGMENT=3
 
 class EventSchema(Schema):
     id=fields.Integer(dump_only=True)
