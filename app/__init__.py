@@ -1,11 +1,15 @@
 from flask import Flask
-from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token
+from flask.helpers import get_debug_flag
+from app.config import DevConfig, ProdConfig
+
 
 app = Flask(__name__)
-app.config.from_object(Config)
+
+CONFIG = DevConfig if get_debug_flag() else ProdConfig
+app.config.from_object(CONFIG)
 
 db = SQLAlchemy()
 migrate = Migrate()

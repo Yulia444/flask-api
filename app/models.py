@@ -1,6 +1,6 @@
 from app import db
 from datetime import date, datetime
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import enum
 from sqlalchemy.dialects.postgresql import ENUM
 
@@ -44,6 +44,9 @@ class Participants(db.Model):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+    
+    def password_valid(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Enrollments(db.Model):
     __tablename__='enrollments'
