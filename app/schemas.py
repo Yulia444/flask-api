@@ -23,7 +23,7 @@ class ParticipatesSchema(Schema):
     location=fields.String()
     about=fields.String()
     enrollmants=fields.Nested("EnrollmentsSchema")
-    events=fields.Nested("AccossiationShema")
+    events=fields.Nested("EventSchema")
 
 class EnrollmentsSchema(Schema):
     id=fields.Integer(dump_only=True)

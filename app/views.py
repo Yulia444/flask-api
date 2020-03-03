@@ -1,13 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from sqlalchemy import and_
 from app import app, db
 from app.schemas import LocationsSchema, EventSchema, ParticipatesSchema
-from app.models import Locations, Event, Participants
-
-
-@app.route('/')
-def main():
-    return 'Hello!'
+from app.models import Locations, Event, Participants, Enrollments
 
 
 @app.route('/locations/', methods=["GET"])
@@ -30,7 +26,18 @@ def api_get_events():
 
 @app.route('/enrollments/id=<int:eventid>/', methods=["POST","DELETE"])
 @jwt_required
-def api_post_event():
+def api_post_event(eventid):
+    if request.method == "POST":
+        enrollment = Enrollments(
+            event_id = eventid,
+            participant_id = get_jwt_identity()
+        )
+        db.session.add(enrollment)
+        db.session.commit()
+    elif request.method == "DELETE":
+        db.session.delete(Enrollments.query.filter_by(and_(event_id=eventid,
+         participant_id = get_jwt_identity())))
+        db.session.commit()
     return jsonify({'status':'success'})
 
 
